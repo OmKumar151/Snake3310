@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9039bf9c15edd06479806c5cb1c65af2, type: 3}
+  m_Name: SnakeSpriteDatabase
+  m_EditorClassIdentifier: 
+  headUp: {fileID: -458902070, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  headDown: {fileID: 176598600, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  headLeft: {fileID: -189567697, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  headRight: {fileID: -1055873414, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  bodyHorizontal: {fileID: 1988610147, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  bodyVertical: {fileID: -156296596, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  cornerTopLeft: {fileID: -1032656323, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  cornerTopRight: {fileID: -2099555492, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  cornerBottomLeft: {fileID: -476749544, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  cornerBottomRight: {fileID: -544158893, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  tailUp: {fileID: 2002528684, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  tailDown: {fileID: 1738744889, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  tailLeft: {fileID: -430715853259419360, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}
+  tailRight: {fileID: 466687504, guid: 20b39ee7ded109d46adafc7021bec5f2, type: 3}

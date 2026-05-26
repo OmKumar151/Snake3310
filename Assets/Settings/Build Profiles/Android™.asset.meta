@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f765f9918f00c494186abc8287cd9ab2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 370776
+  packageName: Snake 2D Lite
+  packageVersion: 1.0
+  assetPath: "Assets/Settings/Build Profiles/Android\u2122.asset"
+  uploadId: 904590
