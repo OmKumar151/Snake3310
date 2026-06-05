@@ -9,31 +9,30 @@ public class SnakeController : MonoBehaviour
     private float moveTimer;
 
     private Vector2Int direction = Vector2Int.right;
-
     private Vector2Int currentGridPosition;
+
+    private bool isDead;
 
     [Header("References")]
     public Transform headTransform;
-
     public GameObject bodyPrefab;
-
     public GameObject tailPrefab;
 
     [Header("Body Settings")]
     public int startingBodyParts = 1;
 
-    private List<SnakeSegment> bodySegments =
+    private readonly List<SnakeSegment> bodySegments =
         new List<SnakeSegment>();
 
     private SnakeSegment tailSegment;
 
-    private List<Vector2Int> previousPositions =
+    private readonly List<Vector2Int> previousPositions =
         new List<Vector2Int>();
 
     private void Start()
     {
-        // Spawn snake in center area
-        currentGridPosition = new Vector2Int(0, 0);
+        currentGridPosition =
+    new Vector2Int(0, 0);
 
         transform.position =
             GridManager.Instance.GridToWorldPosition(
@@ -45,6 +44,9 @@ public class SnakeController : MonoBehaviour
 
     private void Update()
     {
+        if (isDead)
+            return;
+
         HandleInput();
 
         moveTimer += Time.deltaTime;
@@ -52,35 +54,30 @@ public class SnakeController : MonoBehaviour
         if (moveTimer >= moveDelay)
         {
             moveTimer = 0f;
-
             Move();
         }
     }
 
     private void HandleInput()
     {
-        // UP
         if (Input.GetKeyDown(KeyCode.W) &&
             direction != Vector2Int.down)
         {
             direction = Vector2Int.up;
         }
 
-        // DOWN
         if (Input.GetKeyDown(KeyCode.S) &&
             direction != Vector2Int.up)
         {
             direction = Vector2Int.down;
         }
 
-        // LEFT
         if (Input.GetKeyDown(KeyCode.A) &&
             direction != Vector2Int.right)
         {
             direction = Vector2Int.left;
         }
 
-        // RIGHT
         if (Input.GetKeyDown(KeyCode.D) &&
             direction != Vector2Int.left)
         {
@@ -90,33 +87,33 @@ public class SnakeController : MonoBehaviour
 
     private void Move()
     {
-        // Store old positions
         previousPositions.Clear();
 
-        // Head old position
         previousPositions.Add(currentGridPosition);
 
-        // Body old positions
         foreach (SnakeSegment segment in bodySegments)
         {
             previousPositions.Add(segment.gridPosition);
         }
 
-        // Tail old position
         if (tailSegment != null)
         {
             previousPositions.Add(tailSegment.gridPosition);
         }
 
-        // Move head
         currentGridPosition += direction;
+
+        if (!GridManager.Instance.IsInsideGrid(currentGridPosition))
+        {
+            Die();
+            return;
+        }
 
         transform.position =
             GridManager.Instance.GridToWorldPosition(
                 currentGridPosition
             );
 
-        // Move body
         for (int i = 0; i < bodySegments.Count; i++)
         {
             bodySegments[i].gridPosition =
@@ -128,7 +125,6 @@ public class SnakeController : MonoBehaviour
                 );
         }
 
-        // Move tail
         if (tailSegment != null)
         {
             Vector2Int newTailPosition;
@@ -136,7 +132,9 @@ public class SnakeController : MonoBehaviour
             if (bodySegments.Count > 0)
             {
                 newTailPosition =
-                    previousPositions[previousPositions.Count - 2];
+                    previousPositions[
+                        previousPositions.Count - 2
+                    ];
             }
             else
             {
@@ -154,12 +152,32 @@ public class SnakeController : MonoBehaviour
         }
     }
 
+    private bool CheckSelfCollision()
+    {
+        foreach (SnakeSegment segment in bodySegments)
+        {
+            if (segment.gridPosition ==
+                currentGridPosition)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void Die()
+    {
+        isDead = true;
+
+        Debug.Log("GAME OVER");
+    }
+
     private void CreateStartingSnake()
     {
         Vector2Int spawnPosition =
             currentGridPosition;
 
-        // Create body parts
         for (int i = 0; i < startingBodyParts; i++)
         {
             spawnPosition += Vector2Int.left;
@@ -182,7 +200,6 @@ public class SnakeController : MonoBehaviour
             bodySegments.Add(segment);
         }
 
-        // Create tail
         spawnPosition += Vector2Int.left;
 
         GameObject tailObject =
@@ -205,7 +222,6 @@ public class SnakeController : MonoBehaviour
     {
         Vector2Int spawnPosition;
 
-        // Spawn at current tail position
         if (tailSegment != null)
         {
             spawnPosition =
