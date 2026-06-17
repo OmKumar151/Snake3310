@@ -8,7 +8,13 @@ public class SnakeController : MonoBehaviour
 
     private float moveTimer;
 
+<<<<<<< HEAD
     private Vector2Int direction = Vector2Int.right;
+=======
+    private Vector2Int direction =
+        Vector2Int.right;
+
+>>>>>>> 8444d17 (Snake movement improved)
     private Vector2Int currentGridPosition;
 
     private bool isDead;
@@ -17,6 +23,11 @@ public class SnakeController : MonoBehaviour
     public Transform headTransform;
     public GameObject bodyPrefab;
     public GameObject tailPrefab;
+
+    [Header("Sprites")]
+    public SnakeSprites snakeSprites;
+
+    private SpriteRenderer headSpriteRenderer;
 
     [Header("Body Settings")]
     public int startingBodyParts = 1;
@@ -31,8 +42,19 @@ public class SnakeController : MonoBehaviour
 
     private void Start()
     {
+<<<<<<< HEAD
         currentGridPosition =
     new Vector2Int(0, 0);
+=======
+        headSpriteRenderer =
+            headTransform.GetComponent<SpriteRenderer>();
+
+        currentGridPosition =
+            new Vector2Int(
+                GridManager.Instance.width / 2,
+                GridManager.Instance.height / 2
+            );
+>>>>>>> 8444d17 (Snake movement improved)
 
         transform.position =
             GridManager.Instance.GridToWorldPosition(
@@ -40,6 +62,8 @@ public class SnakeController : MonoBehaviour
             );
 
         CreateStartingSnake();
+
+        UpdateHeadSprite();
     }
 
     private void Update()
@@ -64,24 +88,32 @@ public class SnakeController : MonoBehaviour
             direction != Vector2Int.down)
         {
             direction = Vector2Int.up;
+
+            UpdateHeadSprite();
         }
 
         if (Input.GetKeyDown(KeyCode.S) &&
             direction != Vector2Int.up)
         {
             direction = Vector2Int.down;
+
+            UpdateHeadSprite();
         }
 
         if (Input.GetKeyDown(KeyCode.A) &&
             direction != Vector2Int.right)
         {
             direction = Vector2Int.left;
+
+            UpdateHeadSprite();
         }
 
         if (Input.GetKeyDown(KeyCode.D) &&
             direction != Vector2Int.left)
         {
             direction = Vector2Int.right;
+
+            UpdateHeadSprite();
         }
     }
 
@@ -89,21 +121,36 @@ public class SnakeController : MonoBehaviour
     {
         previousPositions.Clear();
 
+<<<<<<< HEAD
         previousPositions.Add(currentGridPosition);
+=======
+        previousPositions.Add(
+            currentGridPosition
+        );
+>>>>>>> 8444d17 (Snake movement improved)
 
         foreach (SnakeSegment segment in bodySegments)
         {
-            previousPositions.Add(segment.gridPosition);
+            previousPositions.Add(
+                segment.gridPosition
+            );
         }
 
         if (tailSegment != null)
         {
-            previousPositions.Add(tailSegment.gridPosition);
+            previousPositions.Add(
+                tailSegment.gridPosition
+            );
         }
 
         currentGridPosition += direction;
 
+<<<<<<< HEAD
         if (!GridManager.Instance.IsInsideGrid(currentGridPosition))
+=======
+        if (!GridManager.Instance.IsInsideGrid(
+            currentGridPosition))
+>>>>>>> 8444d17 (Snake movement improved)
         {
             Die();
             return;
@@ -114,7 +161,13 @@ public class SnakeController : MonoBehaviour
                 currentGridPosition
             );
 
+<<<<<<< HEAD
         for (int i = 0; i < bodySegments.Count; i++)
+=======
+        for (int i = 0;
+             i < bodySegments.Count;
+             i++)
+>>>>>>> 8444d17 (Snake movement improved)
         {
             bodySegments[i].gridPosition =
                 previousPositions[i];
@@ -152,6 +205,7 @@ public class SnakeController : MonoBehaviour
         }
     }
 
+<<<<<<< HEAD
     private bool CheckSelfCollision()
     {
         foreach (SnakeSegment segment in bodySegments)
@@ -164,6 +218,36 @@ public class SnakeController : MonoBehaviour
         }
 
         return false;
+=======
+    private void UpdateHeadSprite()
+    {
+        if (snakeSprites == null)
+            return;
+
+        if (headSpriteRenderer == null)
+            return;
+
+        if (direction == Vector2Int.up)
+        {
+            headSpriteRenderer.sprite =
+                snakeSprites.headUp;
+        }
+        else if (direction == Vector2Int.down)
+        {
+            headSpriteRenderer.sprite =
+                snakeSprites.headDown;
+        }
+        else if (direction == Vector2Int.left)
+        {
+            headSpriteRenderer.sprite =
+                snakeSprites.headLeft;
+        }
+        else if (direction == Vector2Int.right)
+        {
+            headSpriteRenderer.sprite =
+                snakeSprites.headRight;
+        }
+>>>>>>> 8444d17 (Snake movement improved)
     }
 
     private void Die()
@@ -178,7 +262,13 @@ public class SnakeController : MonoBehaviour
         Vector2Int spawnPosition =
             currentGridPosition;
 
+<<<<<<< HEAD
         for (int i = 0; i < startingBodyParts; i++)
+=======
+        for (int i = 0;
+             i < startingBodyParts;
+             i++)
+>>>>>>> 8444d17 (Snake movement improved)
         {
             spawnPosition += Vector2Int.left;
 

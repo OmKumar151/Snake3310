@@ -737,6 +737,7 @@ MonoBehaviour:
   headTransform: {fileID: 109221440}
   bodyPrefab: {fileID: 187385740509277260, guid: 4aa04986a1c210645875c657944b15d0, type: 3}
   tailPrefab: {fileID: 187385740509277260, guid: 754f5074eb7d6454e974766c59f50635, type: 3}
+  snakeSprites: {fileID: 11400000, guid: b72ac66976379ff40ac7c7f2232cf3ae, type: 2}
   startingBodyParts: 1
 --- !u!1 &1125473392
 GameObject:
@@ -992,6 +993,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 18
   height: 18
+  cellSize: 0.5
 --- !u!4 &1909239270
 Transform:
   m_ObjectHideFlags: 0
