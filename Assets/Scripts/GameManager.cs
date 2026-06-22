@@ -59,15 +59,9 @@ public class GameManager : MonoBehaviour
         List<Vector2Int> freeCells =
             GridManager.Instance.GetAllCells();
 
-        freeCells.Remove(
-            snake.GetHeadPosition()
-        );
-
-        foreach (SnakeSegment segment in snake.GetBodySegments())
+        foreach (Vector2Int position in snake.GetSnakePositions())
         {
-            freeCells.Remove(
-                segment.gridPosition
-            );
+            freeCells.Remove(position);
         }
 
         if (freeCells.Count == 0)
