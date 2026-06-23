@@ -9,6 +9,6 @@ public class Apple : MonoBehaviour
         GridPosition = gridPosition;
 
         transform.position =
-            GridManager.Instance.GridToWorldPosition(gridPosition);
+            Board.Instance.GridToWorld(gridPosition);
     }
 }

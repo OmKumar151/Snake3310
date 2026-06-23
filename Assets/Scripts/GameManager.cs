@@ -24,7 +24,16 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        if (Board.Instance == null)
+        {
+            Debug.LogError(
+                "Board.Instance is NULL. Attach Board.cs to the Board object."
+            );
+            return;
+        }
+
         SpawnApple();
+
         UpdateScoreUI();
     }
 
@@ -46,6 +55,7 @@ public class GameManager : MonoBehaviour
             snake.Grow();
 
             Destroy(currentApple.gameObject);
+
             currentApple = null;
 
             SpawnApple();
@@ -56,17 +66,31 @@ public class GameManager : MonoBehaviour
 
     private void SpawnApple()
     {
-        List<Vector2Int> freeCells =
-            GridManager.Instance.GetAllCells();
+        if (Board.Instance == null)
+            return;
 
-        foreach (Vector2Int position in snake.GetSnakePositions())
+        List<Vector2Int> freeCells =
+            new List<Vector2Int>();
+
+        for (int x = 1; x < Board.Instance.width - 1; x++)
+        {
+            for (int y = 1; y < Board.Instance.height - 1; y++)
+            {
+                freeCells.Add(new Vector2Int(x, y));
+            }
+        }
+
+        foreach (Vector2Int position in
+                 snake.GetSnakePositions())
         {
             freeCells.Remove(position);
         }
 
         if (freeCells.Count == 0)
         {
-            Debug.Log("No free cells remaining.");
+            Debug.Log(
+                "No free cells remaining."
+            );
             return;
         }
 
@@ -78,13 +102,14 @@ public class GameManager : MonoBehaviour
                 )
             ];
 
-        currentApple = Instantiate(
-            applePrefab,
-            GridManager.Instance.GridToWorldPosition(
-                spawnCell
-            ),
-            Quaternion.identity
-        );
+        currentApple =
+            Instantiate(
+                applePrefab,
+                Board.Instance.GridToWorld(
+                    spawnCell
+                ),
+                Quaternion.identity
+            );
 
         currentApple.SetGridPosition(
             spawnCell
