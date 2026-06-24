@@ -43,6 +43,9 @@ public class SnakeController : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.state != GameManager.GameState.Playing)
+            return;
+
         if (isDead) return;
 
         HandleInput();
@@ -110,10 +113,7 @@ public class SnakeController : MonoBehaviour
     private void GameOver()
     {
         isDead = true;
-        Debug.Log("GAME OVER");
-
-        // OPTIONAL CLEANUP HOOK (you can extend later)
-        // GameManager.Instance.OnGameOver();
+        GameManager.Instance.GameOver();
     }
 
     private void CreateSnake()
@@ -272,4 +272,25 @@ public class SnakeController : MonoBehaviour
     {
         return snakePositions;
     }
+
+    public void ResetSnake()
+    {
+        isDead = false;
+
+        direction = Vector2Int.right;
+        nextDirection = Vector2Int.right;
+
+        CreateSnake();
+    }
+
+    public void ForceGameOver()
+    {
+        GameOver();
+    }
+
+    public bool IsDead()
+    {
+        return isDead;
+    }
+
 }

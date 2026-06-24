@@ -6,16 +6,35 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public enum GameState
+    {
+        MainMenu,
+        Playing,
+        GameOver
+    }
+
+    [Header("State")]
+    public GameState state;
+
     [Header("References")]
     public SnakeController snake;
     public Apple applePrefab;
 
     private Apple currentApple;
 
-    [Header("UI")]
+    [Header("UI - Panels")]
+    public GameObject mainMenuPanel;
+    public GameObject gameOverPanel;
+    public GameObject hudPanel;
+
+    [Header("UI - Text")]
     public TMP_Text scoreText;
+    public TMP_Text finalScoreText;
+    public TMP_Text highScoreText;
+    public TMP_Text menuHighScoreText;
 
     private int score;
+    private int highScore;
 
     private void Awake()
     {
@@ -24,53 +43,104 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (Board.Instance == null)
-        {
-            Debug.LogError(
-                "Board.Instance is NULL. Attach Board.cs to the Board object."
-            );
-            return;
-        }
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
 
-        SpawnApple();
-
-        UpdateScoreUI();
+        ShowMainMenu();
     }
 
     private void Update()
     {
-        CheckAppleCollision();
+        if (state == GameState.Playing)
+        {
+            CheckAppleCollision();
+        }
     }
+
+    // ---------------- STATE CONTROL ----------------
+
+    public void StartGame()
+    {
+        state = GameState.Playing;
+
+        score = 0;
+        UpdateScoreUI();
+
+        mainMenuPanel.SetActive(false);
+        gameOverPanel.SetActive(false);
+        hudPanel.SetActive(true);
+
+        snake.ResetSnake();
+
+        SpawnApple();
+    }
+
+    public void ShowMainMenu()
+    {
+        state = GameState.MainMenu;
+
+        mainMenuPanel.SetActive(true);
+        gameOverPanel.SetActive(false);
+        hudPanel.SetActive(false);
+
+        menuHighScoreText.text = "High Score: " + highScore;
+    }
+
+    public void GameOver()
+    {
+        state = GameState.GameOver;
+
+        AudioManager.Instance.PlayGameOver();
+
+        if (score > highScore)
+        {
+            highScore = score;
+            PlayerPrefs.SetInt("HighScore", highScore);
+            PlayerPrefs.Save();
+        }
+
+        gameOverPanel.SetActive(true);
+        hudPanel.SetActive(false);
+
+        finalScoreText.text = "Score: " + score;
+        highScoreText.text = "High Score: " + highScore;
+    }
+
+    public void RestartGame()
+    {
+        StartGame();
+    }
+
+    public void GoToMainMenu()
+    {
+        ShowMainMenu();
+    }
+
+    // ---------------- GAMEPLAY ----------------
 
     private void CheckAppleCollision()
     {
         if (currentApple == null)
             return;
 
-        if (snake.GetHeadPosition() ==
-            currentApple.GridPosition)
+        if (snake.GetHeadPosition() == currentApple.GridPosition)
         {
             score++;
+
+            AudioManager.Instance.PlayEat();
 
             snake.Grow();
 
             Destroy(currentApple.gameObject);
-
             currentApple = null;
 
             SpawnApple();
-
             UpdateScoreUI();
         }
     }
 
     private void SpawnApple()
     {
-        if (Board.Instance == null)
-            return;
-
-        List<Vector2Int> freeCells =
-            new List<Vector2Int>();
+        List<Vector2Int> freeCells = new List<Vector2Int>();
 
         for (int x = 1; x < Board.Instance.width - 1; x++)
         {
@@ -80,58 +150,27 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        foreach (Vector2Int position in
-                 snake.GetSnakePositions())
+        foreach (Vector2Int pos in snake.GetSnakePositions())
         {
-            freeCells.Remove(position);
+            freeCells.Remove(pos);
         }
 
-        if (freeCells.Count == 0)
-        {
-            Debug.Log(
-                "No free cells remaining."
-            );
-            return;
-        }
+        Vector2Int spawn = freeCells[Random.Range(0, freeCells.Count)];
 
-        Vector2Int spawnCell =
-            freeCells[
-                Random.Range(
-                    0,
-                    freeCells.Count
-                )
-            ];
-
-        currentApple =
-            Instantiate(
-                applePrefab,
-                Board.Instance.GridToWorld(
-                    spawnCell
-                ),
-                Quaternion.identity
-            );
-
-        currentApple.SetGridPosition(
-            spawnCell
+        currentApple = Instantiate(
+            applePrefab,
+            Board.Instance.GridToWorld(spawn),
+            Quaternion.identity
         );
 
-        Debug.Log(
-            "Apple spawned at: " +
-            spawnCell
-        );
+        currentApple.SetGridPosition(spawn);
     }
 
     private void UpdateScoreUI()
     {
         if (scoreText != null)
-        {
-            scoreText.text =
-                "Score: " + score;
-        }
+            scoreText.text = "Score: " + score;
     }
 
-    public int GetScore()
-    {
-        return score;
-    }
+    public int GetScore() => score;
 }
