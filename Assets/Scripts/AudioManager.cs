@@ -12,31 +12,67 @@ public class AudioManager : MonoBehaviour
 
     private bool muted;
 
+
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+
+        muted =
+            PlayerPrefs.GetInt("Muted", 0) == 1;
+
+
+        source.mute = muted;
     }
+
 
     public void PlayEat()
     {
-        if (!muted) source.PlayOneShot(eat);
+        if (!muted)
+            source.PlayOneShot(eat);
     }
+
 
     public void PlayGameOver()
     {
-        if (!muted) source.PlayOneShot(gameOver);
+        if (!muted)
+            source.PlayOneShot(gameOver);
     }
+
 
     public void PlayButton()
     {
-        if (!muted) source.PlayOneShot(button);
+        if (!muted)
+            source.PlayOneShot(button);
     }
+
 
     public void ToggleMute()
     {
         muted = !muted;
+
         source.mute = muted;
+
+
+        PlayerPrefs.SetInt(
+            "Muted",
+            muted ? 1 : 0
+        );
+
+        PlayerPrefs.Save();
     }
 
-    public bool IsMuted() => muted;
+
+    public bool IsMuted()
+    {
+        return muted;
+    }
 }

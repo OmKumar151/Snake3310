@@ -60,6 +60,8 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        ClearApple();
+
         state = GameState.Playing;
 
         score = 0;
@@ -112,6 +114,8 @@ public class GameManager : MonoBehaviour
 
     public void GoToMainMenu()
     {
+        ClearApple();
+
         ShowMainMenu();
     }
 
@@ -164,6 +168,23 @@ public class GameManager : MonoBehaviour
         );
 
         currentApple.SetGridPosition(spawn);
+    }
+
+    private void ClearApple()
+    {
+        if (currentApple != null)
+        {
+            Destroy(currentApple.gameObject);
+            currentApple = null;
+        }
+
+
+        Apple[] apples = FindObjectsByType<Apple>(FindObjectsSortMode.None);
+
+        foreach (Apple apple in apples)
+        {
+            Destroy(apple.gameObject);
+        }
     }
 
     private void UpdateScoreUI()

@@ -8,11 +8,20 @@ public class VolumeButton : MonoBehaviour
 
     public Image image;
 
+
+    private void Start()
+    {
+        UpdateIcon();
+    }
+
+
     public void Toggle()
     {
         AudioManager.Instance.ToggleMute();
+
         UpdateIcon();
     }
+
 
     public void UpdateIcon()
     {
